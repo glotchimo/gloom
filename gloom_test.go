@@ -56,6 +56,10 @@ func TestGloomGet(t *testing.T) {
 		t.Errorf("error putting data: %s", err.Error())
 	}
 
+	if err := g.Put([]byte("0xckdf78"), []byte("0xckdf78")); err != nil {
+		t.Errorf("error putting data: %s", err.Error())
+	}
+
 	// Do valid check
 	data, err := g.Get([]byte("bd9JVE4Z"))
 	if err != nil {
@@ -73,8 +77,22 @@ func TestGloomGet(t *testing.T) {
 		}
 	}
 
+	// Make sure we get the right data out
+	data, err = g.Get([]byte("0xckdf78"))
+	if err != nil {
+		t.Errorf("error getting data: %s", err)
+	}
+
+	if string(data) != "0xckdf78" {
+		t.Errorf("invalid data: %s", data)
+	}
+
 	// Clean up
 	if err := os.Remove("bd9JVE4Z"); err != nil {
+		t.Errorf("error removing file: %s", err.Error())
+	}
+
+	if err := os.Remove("0xckdf78"); err != nil {
 		t.Errorf("error removing file: %s", err.Error())
 	}
 }
